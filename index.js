@@ -2,7 +2,22 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-const Port = 3002;
+const cors = require("cors");
+require("dotenv").config();
+const Port = process.env.PORT || 3002;
+
+
+//API Key
+function checkApiKey(req, res, next) {
+    const userApiKey = req.query.api_key;
+    const validApiKey = process.env.API_KEY;
+
+    if (!userApiKey || userApiKey !== validApiKey) {
+        return res.status(401).json({ error: "Unauthorized - Invalid API Key ❌" });
+    }
+
+    next(); 
+}
 
 //Trending Song 
 let wizkid = [
@@ -650,11 +665,15 @@ const albums = {
 };
 
 // ✅ Serve Music API
-app.get("/artists", (req, res) => {
+app.get("/trending", checkApiKey, (req, res) => {
+    res.json(wizkid);
+});
+
+app.get("/artists", checkApiKey, (req, res) => {
     res.json(artists);
 });
 
-app.get("/albums", (req, res) => {
+app.get("/albums", checkApiKey, (req, res) => {
     res.json(albums);
 });
 
