@@ -7,17 +7,22 @@ require("dotenv").config();
 const Port = process.env.PORT || 3002;
 
 
-//API Key
-function checkApiKey(req, res, next) {
+//Check API Key
+const checkApiKey = (req, res, next) => {
     const userApiKey = req.query.api_key;
-    const validApiKey = process.env.API_KEY;
+    const validApiKeys = process.env.API_KEYS ? process.env.API_KEYS.split(',') : [];
 
-    if (!userApiKey || userApiKey !== validApiKey) {
+    console.log("Checking API Key:", userApiKey);
+    console.log("Valid API Keys:", validApiKeys);
+
+    if (!userApiKey || !validApiKeys.includes(userApiKey)) {
         return res.status(401).json({ error: "Unauthorized - Invalid API Key ❌" });
     }
 
-    next(); 
+    next();
 }
+
+app.use(cors());
 
 //Trending Song 
 let wizkid = [
