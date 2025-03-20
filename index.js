@@ -5,7 +5,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const Port = process.env.PORT || 3002;
-const url = "https://thetracks-api.onrender.com/";
+const url = "https://thetracks-api.onrender.com";
 
 
 //Check API Key
